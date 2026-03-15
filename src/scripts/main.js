@@ -15,6 +15,7 @@ function createMessage(text, className) {
 }
 
 let resolveFirstPromise;
+let rejectFirstPromise;
 let resolveSecondPromise;
 let resolveThirdPromise;
 
@@ -24,7 +25,10 @@ let isRMBClicked = false;
 const firstPromise = new Promise((resolve, reject) => {
   resolveFirstPromise = resolve;
 
-  setTimeout(() => reject('First promise was rejected'), 3000);
+  rejectFirstPromise = setTimeout(
+    () => reject('First promise was rejected'),
+    3000,
+  );
 });
 
 const secondPromise = new Promise((resolve) => {
@@ -37,6 +41,8 @@ const thirdPromise = new Promise((resolve) => {
 
 document.addEventListener('click', () => {
   isLMBClicked = true;
+
+  clearTimeout(rejectFirstPromise);
 
   resolveFirstPromise('First promise was resolved');
   resolveSecondPromise('Second promise was resolved');
@@ -60,7 +66,6 @@ firstPromise
   .then((message) => createMessage(message, 'success'))
   .catch((message) => createMessage(message, 'error'));
 
-secondPromise.then((message) =>
-  createMessage(message, 'success'));
+secondPromise.then((message) => createMessage(message, 'success'));
 
 thirdPromise.then((message) => createMessage(message, 'success'));
